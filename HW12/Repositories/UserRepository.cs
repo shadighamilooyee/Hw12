@@ -26,18 +26,9 @@ namespace HW12.Repositories
         {
             return _context.Users.FirstOrDefault(p => p.Username == username);
         }
-        public void AddToUserBorrowedBooks(BorrowedBook borrowedbook)
+        public User GetUserById(int userid)
         {
-            var user = _context.Users
-                .Include(u => u.BorrowedBooks)
-                .FirstOrDefault(u => u.Id == borrowedbook.UserId);
-            if (user != null)
-            {
-                user.BorrowedBooks.Add(borrowedbook);
-                _context.SaveChanges();
-            }
-            //_context.BorrowedBooks.Add(borrowedbook);
-            //_context.SaveChanges();
+            return _context.Users.FirstOrDefault(p => p.Id == userid);
         }
         public List<BorrowedBook> GetUserBorrowedBooks(int userid)
         {
@@ -50,10 +41,29 @@ namespace HW12.Repositories
         public List<Review> GetUserReviews(int userid)
         {
             var user = _context.Users
-                      .Include(p => p.Reviews)
-                      .ThenInclude(p => p.Book)
-                      .FirstOrDefault(u => u.Id == userid);
+                .AsNoTracking()
+                .Include(p => p.Reviews)
+                .ThenInclude(p => p.Book)
+                .FirstOrDefault(u => u.Id == userid);
             return user.Reviews;
+        }
+        public List<Wishlist> UserWishlists(int userid)
+        {
+            var user = _context.Users
+                .AsNoTracking()
+                .Include(p => p.Wishlist)
+                .ThenInclude(p=>p.Book)
+                .FirstOrDefault(u => u.Id == userid);
+            return user.Wishlist;
+        }
+        public void ChangePenaltyAmount(int userid, decimal penaltyamount)
+        {
+            var user = GetUserById(userid);
+            if (user != null)
+            {
+                user.PenaltyAmount = penaltyamount;
+                _context.SaveChanges();
+            }
         }
     }
 }

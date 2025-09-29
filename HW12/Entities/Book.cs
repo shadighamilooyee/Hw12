@@ -10,5 +10,6 @@ namespace HW12.Entities
         public int CategoryId { get; set; }
         public bool IsBorrowed { get; set; }
         public List<Review>? Reviews { get; set; }
+        public List<Wishlist>? Wishlist { get; set; }
     }
 }

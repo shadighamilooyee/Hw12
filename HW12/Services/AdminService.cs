@@ -37,7 +37,7 @@ namespace HW12.Services
         public List<Book> GetBooks()
         {
             return _bookrepo.GetAllBooks();
-        }
+        }   
         public List<Category> GetCategories()
         {
             return _categoryrepo.GetAllCategories();
@@ -54,8 +54,7 @@ namespace HW12.Services
         }
         public void ChangeIsApproved(int reviewid, bool isApproved)
         {
-            var review = _reviewrepo.GetReviewById(reviewid);
-            _reviewrepo.ChangeIsApproved(review, isApproved);
+            _reviewrepo.ChangeIsApproved(reviewid, isApproved);
         }
         public List<Review> GetAllReviews()
         {

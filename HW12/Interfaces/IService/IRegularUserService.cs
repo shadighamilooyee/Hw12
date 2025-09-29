@@ -16,5 +16,11 @@ namespace HW12.Interfaces.IService
         void ChangeUserRating(float newrating, int reviewid);
         List<Review> ShowBooksReviews(int bookid);
         float BookAvgRating(int bookid);
+        void AddWishlist(int userid, int bookid);
+        void DeleteWishlist(int wishlistid, int userid);
+        List<Wishlist> GetUserWishlists(int userid);
+        void ReturnBook(int borrowedbookid, int userid);
+        void ChangeUserPenaltyAmount(BorrowedBook borrowedbook, int userid);
+
     }
 }

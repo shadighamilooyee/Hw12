@@ -2,6 +2,7 @@
 using HW12.Interfaces.IRepository;
 using HW12.Interfaces.IService;
 using HW12.LocalDb;
+using HW12.Migrations;
 using HW12.Repositories;
 using Microsoft.EntityFrameworkCore;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -15,6 +16,7 @@ namespace HW12.Services
         private readonly IBorrowedBookRepository _borrowedbookrepo = new BorrowedBookRepository();
         private readonly IUserRepository _userrepo = new UserRepository();
         private readonly IReviewRepository _reviewrepo = new ReviewRepository();
+        private readonly IWishlistRepository _wishlistrepo = new WishlistRepository();
         public List<Category> GetCategories()
         {
             var categories = _categoryrepo.GetAllCategories();
@@ -60,8 +62,31 @@ namespace HW12.Services
             };
 
             _borrowedbookrepo.AddBorrowedBook(borrowedbook);
-            _bookrepo.ChangeIsBorrowed(book, true);
-            //_userrepo.AddToUserBorrowedBooks(borrowedbook);
+            _bookrepo.ChangeIsBorrowed(bookid, true);
+        }
+        public void ReturnBook(int borrowedbookid, int userid)
+        {
+            var borrowedbook = _borrowedbookrepo.GetBorrowedBookById(borrowedbookid);
+
+            if (borrowedbook == null)
+                throw new Exception("Book Not Found With This Id");
+            
+            _borrowedbookrepo.DeleteBorrowedBook(borrowedbookid);
+            _bookrepo.ChangeIsBorrowed(borrowedbookid, false);
+            ChangeUserPenaltyAmount(borrowedbook,userid);
+        }
+        public void ChangeUserPenaltyAmount(BorrowedBook borrowedbook, int userid)
+        {
+            DateTime returndate = DateTime.Now;
+            TimeSpan delay =returndate - borrowedbook.BorrowedDate;
+            decimal minutesDelayed = delay.Minutes;
+            decimal PenaltyAmount = minutesDelayed * 10000;
+            _userrepo.ChangePenaltyAmount(userid, PenaltyAmount);
+        }
+        public decimal GetUserPenaltyAmount(int userid)
+        {
+            var user = _userrepo.GetUserById(userid);
+            return user.PenaltyAmount;
         }
         public List<BorrowedBook> UserBorrowedBooks(int userid)
         {
@@ -106,13 +131,11 @@ namespace HW12.Services
         }
         public void ChangeUserComment(string newcomment, int reviewid)
         {
-            var review = _reviewrepo.GetReviewById(reviewid);
-            _reviewrepo.ChangeComment(review, newcomment);
+            _reviewrepo.ChangeComment(reviewid, newcomment);
         }
         public void ChangeUserRating(float newrating, int reviewid)
         {
-            var review = _reviewrepo.GetReviewById(reviewid);
-            _reviewrepo.ChangeRating(review, newrating);
+            _reviewrepo.ChangeRating(reviewid, newrating);
         }
         public List<Review> ShowBooksReviews(int bookid)
         {
@@ -139,6 +162,40 @@ namespace HW12.Services
             var avgrating = approvedReviews.Average(p=>p.Rating);
 
             return avgrating;
+        }
+        public void AddWishlist(int userid, int bookid)
+        {
+            var wishlist = new Wishlist()
+            {
+                UserId = userid,
+                BookId = bookid,
+                CreatedAt = DateTime.Now
+            };
+            _wishlistrepo.AddWishlist(wishlist);
+        }
+        public void DeleteWishlist(int wishlistid, int userid)
+        {
+            var wishlist = _wishlistrepo.GetWishlistById(wishlistid);
+
+            if (wishlist.UserId != userid)
+                throw new Exception("Wrong Wishlist Id");
+
+            _wishlistrepo.DeleteWishlist(wishlistid);
+        }
+        public List<Wishlist> GetUserWishlists(int userid)
+        {
+            var userwishlists = _userrepo.UserWishlists(userid);
+
+            if (!userwishlists.Any())
+                throw new Exception("You Did Not Add Any Wishlist Yet");
+
+            return userwishlists;
+        }
+        public int BookWishlistCount(int bookid)
+        {
+            var wishlists = _wishlistrepo.GetWishlistByBookId(bookid);
+
+            return wishlists.Count();
         }
     }
 }

@@ -6,5 +6,7 @@ namespace HW12.Interfaces.IRepository
     {
         List<BorrowedBook> GetAllBorrowedBooks();
         void AddBorrowedBook(BorrowedBook borrowedbook);
+        void DeleteBorrowedBook(int borrowedbookid);
+        BorrowedBook GetBorrowedBookById(int id);
     }
 }

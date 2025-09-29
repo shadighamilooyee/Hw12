@@ -10,5 +10,7 @@ namespace HW12.Entities
         public RoleEnum Role { get; set; }
         public List<BorrowedBook>? BorrowedBooks { get; set; }
         public List<Review>? Reviews { get; set; }
+        public List<Wishlist>? Wishlist { get; set; }
+        public decimal PenaltyAmount { get; set; }
     }
 }

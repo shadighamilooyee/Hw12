@@ -10,8 +10,8 @@ namespace HW12.Repositories
         private readonly AppDbContext _context = new();
         public List<Review> GetAllReviews()
         {
-            var _context = new AppDbContext();
             var reviews = _context.Reviews
+                .AsNoTracking()
                 .Include(p => p.User)
                 .Include(p => p.Book)
                 .ToList();
@@ -19,42 +19,52 @@ namespace HW12.Repositories
         }
         public void AddReview(Review review)
         {
-            var _context = new AppDbContext();
             _context.Reviews.Add(review);
             _context.SaveChanges();
         }
-        public void DeleteReview(int id)
+        public void DeleteReview(int reviewid)
         {
-            var _context = new AppDbContext();
-            var review = GetReviewById(id);
-            _context.Remove(review);
-            _context.SaveChanges();
+            var review = GetReviewById(reviewid);
+            if (review != null)
+            {
+                _context.Remove(review);
+                _context.SaveChanges();
+            }
         }
-        public Review GetReviewById(int id)
+        public Review? GetReviewById(int id)
         {
-            var _context = new AppDbContext();
             return _context.Reviews
+                .AsNoTracking()
                 .Include(p => p.User)
                 .Include(p => p.Book)
                 .FirstOrDefault(p => p.Id == id);
         }
-        public void ChangeIsApproved(Review review, bool isApproved)
+        public void ChangeIsApproved(int reviewid, bool isApproved)
         {
-            var _context = new AppDbContext();
-            review.IsApproved = isApproved;
-            _context.SaveChanges();
+            var review = GetReviewById(reviewid);
+            if (review != null)
+            {
+                review.IsApproved = isApproved;
+                _context.SaveChanges();
+            }
         }
-        public void ChangeComment(Review review, string newcomment)
+        public void ChangeComment(int reviewid, string newcomment)
         {
-            var _context = new AppDbContext();
-            review.Comment = newcomment;
-            _context.SaveChanges();
+            var review = GetReviewById(reviewid);
+            if (review != null)
+            {
+                review.Comment = newcomment;
+                _context.SaveChanges();
+            }
         }
-        public void ChangeRating(Review review, float newrating)
+        public void ChangeRating(int reviewid, float newrating)
         {
-            var _context = new AppDbContext();
-            review.Rating = newrating;
-            _context.SaveChanges();
+            var review = GetReviewById(reviewid);
+            if (review != null)
+            {
+                review.Rating = newrating;
+                _context.SaveChanges();
+            }
         }
     }
 }

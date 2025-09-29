@@ -11,6 +11,7 @@ namespace HW12.Repositories
         public List<Book> GetAllBooks()
         {
             var books = _context.Books
+                .AsNoTracking()
                 .Include(p => p.Category)
                 .ToList();
             return books;
@@ -23,26 +24,26 @@ namespace HW12.Repositories
         public Book GetBookById(int id)
         {
             return _context.Books
+                .AsNoTracking()
                 .Include(b => b.Category)
                 .Include(b => b.Reviews)
                 .ThenInclude(r => r.User)
                 .FirstOrDefault(p => p.Id == id);
         }
-        public void ChangeIsBorrowed(Book book, bool isborrowed)
+        public void ChangeIsBorrowed(int bookid, bool isborrowed)
         {
-            var trackedBook = _context.Books.FirstOrDefault(b => b.Id == book.Id);
-            if (trackedBook != null)
+            var book = GetBookById(bookid);
+            if (book != null)
             {
-                trackedBook.IsBorrowed = isborrowed;
+                book.IsBorrowed = isborrowed;
                 _context.SaveChanges();
-            }
-            //book.IsBorrowed = isborrowed;
-            //_context.SaveChanges();
+            }          
         }
-        
+
         public List<Book> GetBookByCategory(int categoryid)
         {
             return _context.Books
+                .AsNoTracking()
                 .Include(p => p.Category)
                 .Where(p => p.CategoryId == categoryid)
                 .ToList();

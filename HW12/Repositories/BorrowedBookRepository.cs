@@ -21,5 +21,22 @@ namespace HW12.Repositories
             _context.BorrowedBooks.Add(borrowedbook);
             _context.SaveChanges();
         }
+        public void DeleteBorrowedBook(int borrowedbookid)
+        {
+            var borrowedbook = GetBorrowedBookById(borrowedbookid);
+            if (borrowedbook != null)
+            {
+                _context.Remove(borrowedbook);
+                _context.SaveChanges();
+            }          
+        }
+        public BorrowedBook GetBorrowedBookById(int id)
+        {
+            return _context.BorrowedBooks
+                .AsNoTracking()
+                .Include(p => p.User)
+                .Include(p => p.Book)
+                .FirstOrDefault(p => p.Id == id);
+        }
     }
 }

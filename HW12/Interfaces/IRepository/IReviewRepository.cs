@@ -6,10 +6,10 @@ namespace HW12.Interfaces.IRepository
     {
         List<Review> GetAllReviews();
         void AddReview(Review review);
-        void DeleteReview(int id);
+        void DeleteReview(int reviewid);
         Review GetReviewById(int id);
-        void ChangeIsApproved(Review review, bool isApproved);
-        void ChangeComment(Review review, string newcomment);
-        void ChangeRating(Review review, float newrating);
+        void ChangeIsApproved(int reviewid, bool isApproved);
+        void ChangeComment(int reviewid, string newcomment);
+        void ChangeRating(int reviewid, float newrating);
     }
 }

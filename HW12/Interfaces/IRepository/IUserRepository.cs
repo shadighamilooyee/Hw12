@@ -7,8 +7,10 @@ namespace HW12.Interfaces.IRepository
         List<User> GetAllUsers();
         void AddUser(User user);
         User GetUserByUsername(string username);
-        void AddToUserBorrowedBooks(BorrowedBook borrowedbook);
         List<BorrowedBook> GetUserBorrowedBooks(int userid);
         List<Review> GetUserReviews(int userid);
+        List<Wishlist> UserWishlists(int userid);
+        void ChangePenaltyAmount(int userid, decimal penaltyamount);
+        User GetUserById(int userid);
     }
 }

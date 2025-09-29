@@ -103,6 +103,11 @@ void RegularUserMenu()
         Console.WriteLine("7.Change My Rating");
         Console.WriteLine("8.Delete My Review");
         Console.WriteLine("9.See Book Reviews");
+        Console.WriteLine("10.My Wishlists");
+        Console.WriteLine("11.Add Wishlist");
+        Console.WriteLine("12.Delete Wishlist");
+        Console.WriteLine("13.Return Book");
+        Console.WriteLine("14.My PenaltyAmount");
         Console.WriteLine("0.Exit");
         Console.WriteLine("-".PadRight(20, '-'));
 
@@ -131,6 +136,7 @@ void RegularUserMenu()
                     p.Title,
                     p.Author,
                     CategoryName = p.Category != null ? p.Category.Name : "No Category",
+                    BookWishListCount = regularUserService.BookWishlistCount(p.Id),
                     p.IsBorrowed
                 });
                 ConsolePainter.WriteTable(mybooks1);
@@ -144,6 +150,7 @@ void RegularUserMenu()
                     p.Title,
                     p.Author,
                     CategoryName = p.Category.Name,
+                    BookWishListCount = regularUserService.BookWishlistCount(p.Id),
                     p.IsBorrowed
                 });
                 ConsolePainter.WriteTable(mybooks2);
@@ -173,6 +180,7 @@ void RegularUserMenu()
                     p.Title,
                     p.Author,
                     CategoryName = p.Category.Name,
+                    BookWishListCount = regularUserService.BookWishlistCount(p.Id),
                     p.IsBorrowed
                 });
                 ConsolePainter.WriteTable(mybooks4);
@@ -262,6 +270,7 @@ void RegularUserMenu()
                     p.Title,
                     p.Author,
                     CategoryName = p.Category.Name,
+                    BookWishListCount = regularUserService.BookWishlistCount(p.Id),
                     p.IsBorrowed
                 });
                 ConsolePainter.WriteTable(mybooks9);
@@ -274,10 +283,75 @@ void RegularUserMenu()
                     p.Comment,
                     p.Rating,
                     User = p.User.Username,
-                    
+
                 });
                 ConsolePainter.WriteTable(mybooksreviews);
                 Console.WriteLine($"The Avg Rating Is {avgrating}");
+                Console.ReadKey();
+                break;
+            case 10:
+                var wishlist10 = regularUserService.GetUserWishlists(userid);
+                var mywishlist10 = wishlist10.Select(p => new
+                {
+                    p.Id,
+                    BookTitle = p.Book.Title,
+                    p.CreatedAt
+                });
+                ConsolePainter.WriteTable(mywishlist10);
+                Console.ReadKey();
+                break;
+            case 11:
+                var books11 = adminService.GetBooks();
+                var mybooks11 = books11.Select(p => new
+                {
+                    p.Id,
+                    p.Title,
+                    p.Author,
+                    CategoryName = p.Category.Name,
+                    BookWishListCount = regularUserService.BookWishlistCount(p.Id),
+                    p.IsBorrowed
+                });
+                ConsolePainter.WriteTable(mybooks11);
+                Console.Write("Please Enter Book Id: ");
+                int bookid11 = int.Parse(Console.ReadLine());
+                regularUserService.AddWishlist(userid, bookid11);
+                Console.WriteLine("Wishlist Added");
+                Console.ReadKey();
+                break;
+            case 12:
+                var wishlist12 = regularUserService.GetUserWishlists(userid);
+                var mywishlist12 = wishlist12.Select(p => new
+                {
+                    p.Id,
+                    BookTitle = p.Book.Title,
+                    p.CreatedAt
+                });
+                ConsolePainter.WriteTable(mywishlist12);
+                Console.Write("Please Enter Wishlist Id: ");
+                int wishlistid12 = int.Parse(Console.ReadLine());
+                regularUserService.DeleteWishlist(wishlistid12, userid);
+                Console.WriteLine("Wishlist Deleted");
+                Console.ReadKey();
+                break;
+            case 13:
+                var mybooks13 = regularUserService.UserBorrowedBooks(userid);
+                var myborrowedbooks13 = mybooks13.Select(p => new
+                {
+                    p.Id,
+                    p.BookId,
+                    BookTitle = p.Book.Title,
+                    p.BorrowedDate
+                });
+                ConsolePainter.WriteTable(myborrowedbooks13);
+                Console.Write("Please Enter Book Id: ");
+                int myborrowedbookid13 = int.Parse(Console.ReadLine());
+                regularUserService.ReturnBook(myborrowedbookid13, userid);
+                Console.WriteLine("Book Returned");
+                Console.ReadKey();
+                break;
+            case 14:
+                decimal penaltyamount = regularUserService.GetUserPenaltyAmount(userid);
+                Console.WriteLine($"Your PenaltyAmount Is: {penaltyamount}");
                 Console.ReadKey();
                 break;
         }
@@ -298,6 +372,7 @@ void AdminMenu()
         Console.WriteLine("4.Add Book");
         Console.WriteLine("5.See Book Reviews");
         Console.WriteLine("6.Change IsApproved For Reviews");
+        Console.WriteLine("7.See User PenaltyAmount");
         Console.WriteLine("0.Exit");
         Console.WriteLine("-".PadRight(20, '-'));
 
@@ -316,6 +391,7 @@ void AdminMenu()
                     p.Title,
                     p.Author,
                     CategoryName = p.Category.Name,
+                    BookWishListCount = regularUserService.BookWishlistCount(p.Id),
                     p.IsBorrowed
                 });
                 ConsolePainter.WriteTable(mybooks);
@@ -360,6 +436,7 @@ void AdminMenu()
                     p.Title,
                     p.Author,
                     CategoryName = p.Category.Name,
+                    BookWishListCount = regularUserService.BookWishlistCount(p.Id),
                     p.IsBorrowed
                 });
                 ConsolePainter.WriteTable(mybooks5);
@@ -399,6 +476,13 @@ void AdminMenu()
                 else if (isapproved > 2)
                     throw new Exception("Wrong Input");
                 adminService.ChangeIsApproved(reviewid6, isapproved6);
+                break;
+            case 7:
+                Console.Write("Please Enter User Id: ");
+                int myuserid = int.Parse(Console.ReadLine());
+                decimal penaltyamount = regularUserService.GetUserPenaltyAmount(myuserid);
+                Console.WriteLine($"Your PenaltyAmount Is: {penaltyamount}");
+                Console.ReadKey();
                 break;
         }
 

@@ -7,7 +7,7 @@ namespace HW12.Interfaces.IRepository
         List<Book> GetAllBooks();
         void AddBook(Book book);
         Book GetBookById(int id);
-        void ChangeIsBorrowed(Book book, bool isborrowed);
+        void ChangeIsBorrowed(int bookid, bool isborrowed);
         List<Book> GetBookByCategory(int categoryid);
     }
 }
