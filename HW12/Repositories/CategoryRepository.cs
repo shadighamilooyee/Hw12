@@ -11,8 +11,9 @@ namespace HW12.Repositories
         public List<Category> GetAllCategories()
         {
             var categories = _context.Categories
+                .AsNoTracking()
                 .Include(p=> p.Books)
-                .AsNoTracking().ToList();
+                .ToList();
             return categories;
         }
         public void AddCategory(Category category)
@@ -22,7 +23,9 @@ namespace HW12.Repositories
         }
         public Category GetCategoryById(int id)
         {
-            return _context.Categories.FirstOrDefault(p => p.Id == id);
+            return _context.Categories
+                .AsNoTracking()
+                .FirstOrDefault(p => p.Id == id);
         }
     }
 }

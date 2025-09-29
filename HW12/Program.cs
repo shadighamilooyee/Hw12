@@ -1,11 +1,8 @@
 ﻿
-using Azure.Identity;
-using HW12.Entities;
 using HW12.Enums;
 using HW12.LocalDb;
 using HW12.Services;
 using HW12.Tools;
-using Microsoft.Identity.Client.Extensions.Msal;
 
 Authentication authentication = new Authentication();
 AdminService adminService = new AdminService();

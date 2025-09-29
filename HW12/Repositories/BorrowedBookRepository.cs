@@ -11,9 +11,10 @@ namespace HW12.Repositories
         public List<BorrowedBook> GetAllBorrowedBooks()
         {
             var borrowedbooks = _context.BorrowedBooks
+                .AsNoTracking()
                 .Include(p => p.User)
                 .Include(p => p.Book)
-                .AsNoTracking().ToList();
+                .ToList();
             return borrowedbooks;
         }
         public void AddBorrowedBook(BorrowedBook borrowedbook)

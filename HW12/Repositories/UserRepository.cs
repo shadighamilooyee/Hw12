@@ -12,9 +12,10 @@ namespace HW12.Repositories
         public List<User> GetAllUsers()
         {
             var users = _context.Users
+                .AsNoTracking()
                 .Include(p => p.BorrowedBooks)
                 .ThenInclude(p => p.Book)
-                .AsNoTracking().ToList();
+                .ToList();
             return users;
         }
         public void AddUser(User user)
@@ -24,18 +25,23 @@ namespace HW12.Repositories
         }
         public User GetUserByUsername(string username)
         {
-            return _context.Users.FirstOrDefault(p => p.Username == username);
+            return _context.Users
+                .AsNoTracking()
+                .FirstOrDefault(p => p.Username == username);
         }
         public User GetUserById(int userid)
         {
-            return _context.Users.FirstOrDefault(p => p.Id == userid);
+            return _context.Users
+                .AsNoTracking()
+                .FirstOrDefault(p => p.Id == userid);
         }
         public List<BorrowedBook> GetUserBorrowedBooks(int userid)
         {
             var user = _context.Users
-                      .Include(p => p.BorrowedBooks)
-                      .ThenInclude(p => p.Book)
-                      .FirstOrDefault(u => u.Id == userid);
+                .AsNoTracking()
+                .Include(p => p.BorrowedBooks)
+                .ThenInclude(p => p.Book)
+                .FirstOrDefault(u => u.Id == userid);
             return user.BorrowedBooks;
         }
         public List<Review> GetUserReviews(int userid)
