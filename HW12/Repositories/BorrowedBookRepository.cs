@@ -34,7 +34,6 @@ namespace HW12.Repositories
         public BorrowedBook GetBorrowedBookById(int id)
         {
             return _context.BorrowedBooks
-                .AsNoTracking()
                 .Include(p => p.User)
                 .Include(p => p.Book)
                 .FirstOrDefault(p => p.Id == id);

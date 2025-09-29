@@ -32,7 +32,7 @@ namespace HW12.Repositories
         public User GetUserById(int userid)
         {
             return _context.Users
-                .AsNoTracking()
+                //.AsNoTracking()
                 .FirstOrDefault(p => p.Id == userid);
         }
         public List<BorrowedBook> GetUserBorrowedBooks(int userid)

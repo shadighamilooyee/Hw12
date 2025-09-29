@@ -34,7 +34,6 @@ namespace HW12.Repositories
         public Review? GetReviewById(int id)
         {
             return _context.Reviews
-                .AsNoTracking()
                 .Include(p => p.User)
                 .Include(p => p.Book)
                 .FirstOrDefault(p => p.Id == id);

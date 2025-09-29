@@ -24,7 +24,6 @@ namespace HW12.Repositories
         public Book GetBookById(int id)
         {
             return _context.Books
-                .AsNoTracking()
                 .Include(b => b.Category)
                 .Include(b => b.Reviews)
                 .ThenInclude(r => r.User)
