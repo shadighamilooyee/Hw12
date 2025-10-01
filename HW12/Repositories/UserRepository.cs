@@ -23,11 +23,11 @@ namespace HW12.Repositories
             _context.Users.Add(user);
             _context.SaveChanges();
         }
-        public User GetUserByUsername(string username)
+        public User GetUserForLogin(string username, string password)
         {
             return _context.Users
                 .AsNoTracking()
-                .FirstOrDefault(p => p.Username == username);
+                .FirstOrDefault(p => p.Username == username && p.Password == password);
         }
         public User GetUserById(int userid)
         {

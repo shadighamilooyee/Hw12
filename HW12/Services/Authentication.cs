@@ -15,9 +15,9 @@ namespace HW12.Services
         private readonly IUserRepository _userrepo = new UserRepository();
         public bool Login(string username, string password)
         {
-            var user = _userrepo.GetUserByUsername(username);
+            var user = _userrepo.GetUserForLogin(username, password);
 
-            if(user != null && user.Password == password)
+            if(user != null)
             {
                 LocalStorage.CurrentUser = user;
                 return true;

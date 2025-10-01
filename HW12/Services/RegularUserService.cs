@@ -51,7 +51,7 @@ namespace HW12.Services
             if (book == null)
                 throw new Exception("Book Not Found With This Id");
 
-            if (!book.IsBorrowed)
+            if (book.IsBorrowed)
                 throw new Exception("Book Already Borrowed");
 
             var borrowedbook = new BorrowedBook()

@@ -6,7 +6,7 @@ namespace HW12.Interfaces.IRepository
     {
         List<User> GetAllUsers();
         void AddUser(User user);
-        User GetUserByUsername(string username);
+        User GetUserForLogin(string username, string password);
         List<BorrowedBook> GetUserBorrowedBooks(int userid);
         List<Review> GetUserReviews(int userid);
         List<Wishlist> UserWishlists(int userid);
